@@ -4,6 +4,7 @@
 #include "die.h"
 #include <time.h>
 #include "roll.h"
+#include "shooter.h"
 
 
 
@@ -33,5 +34,20 @@ TEST_CASE("Test roll return a random number from 2 to 12")
 		bool result = rollvalue >= 2 && rollvalue <= 12;
 		REQUIRE(result == true) ;
 	}
+	
+}
+
+TEST_CASE("Test shooter return a Roll and it's from 2 to 12")
+{
+	Die die1, die2;
+    Shooter shooter;
+    
+	for (int i = 0; i < 10; ++i)
+    {
+        Roll* roll = shooter.throw_dice(die1,die2);
+        int value = roll->roll_value();
+		bool result = value >=2 && value <=12;
+        REQUIRE(result == true);
+    }
 	
 }
