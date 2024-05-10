@@ -5,6 +5,9 @@
 #include <time.h>
 #include "roll.h"
 #include "shooter.h"
+#include "phase.h"
+#include "come_out_phase.h"
+#include "point_phase.h"
 
 
 
@@ -50,4 +53,89 @@ TEST_CASE("Test shooter return a Roll and it's from 2 to 12")
         REQUIRE(result == true);
     }
 	
+}
+
+TEST_CASE("Test ComeOutPhase returns values RollOutcome::natural") 
+{
+    Die die1, die2;
+    Roll roll(die1, die2);
+    ComeOutPhase comeoutphase;
+	do
+	{
+		roll.roll_dice();
+		roll.roll_value();
+	} while (roll.roll_value() != 7 && roll.roll_value() != 11);
+
+	REQUIRE(comeoutphase.get_outcome(&roll) == RollOutcome::natural);	
+}
+
+
+TEST_CASE("Test ComeOutPhase return RollOutcome::craps") 
+{
+    Die die1, die2;
+    Roll roll(die1, die2);
+    ComeOutPhase comeoutphase;
+	do
+	{
+		roll.roll_dice();
+		roll.roll_value();
+	} while (roll.roll_value() != 2 && roll.roll_value() != 3 && roll.roll_value() != 12);
+
+	REQUIRE(comeoutphase.get_outcome(&roll) == RollOutcome::craps);	
+}
+
+TEST_CASE("Test ComeOutPhase return RollOutcome::point ") 
+{
+    Die die1, die2;
+    Roll roll(die1, die2);
+    ComeOutPhase comeoutphase;
+	do
+	{
+		roll.roll_dice();
+		roll.roll_value();
+	} while (roll.roll_value() == 2 || roll.roll_value() == 3 || roll.roll_value() == 12 ||  roll.roll_value() == 7 || roll.roll_value() == 11);
+
+	REQUIRE(comeoutphase.get_outcome(&roll) == RollOutcome::point);	
+}
+
+TEST_CASE("Test PointPhase return RollOutcome::point") 
+{
+    Die die1, die2;
+    Roll roll(die1, die2);
+    PointPhase pointphase(6);
+	do
+	{
+		roll.roll_dice();
+		roll.roll_value();
+	} while (roll.roll_value() != 6);
+
+	REQUIRE(pointphase.get_outcome(&roll) == RollOutcome::point);	
+}
+
+TEST_CASE("Test PointPhase return RollOutcome::seven_out") 
+{
+    Die die1, die2;
+    Roll roll(die1, die2);
+    PointPhase pointphase(6);
+	do
+	{
+		roll.roll_dice();
+		roll.roll_value();
+	} while (roll.roll_value() != 7);
+
+	REQUIRE(pointphase.get_outcome(&roll) == RollOutcome::seven_out);	
+}
+
+TEST_CASE("Test PointPhase return RollOutcome::nopoint") 
+{
+    Die die1, die2;
+    Roll roll(die1, die2);
+    PointPhase pointphase(6);
+	do
+	{
+		roll.roll_dice();
+		roll.roll_value();
+	} while (roll.roll_value() == 7 || roll.roll_value() == 6);
+
+	REQUIRE(pointphase.get_outcome(&roll) == RollOutcome::nopoint);	
 }
